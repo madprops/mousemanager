@@ -1,0 +1,11 @@
+venv/*
+output/*
+*.pyc
+__pycache__/
+.mypy_cache/
+build/
+dist/
+main.spec
+run.spec
+*.tar.gz
+*.zip
