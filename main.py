@@ -24,6 +24,11 @@ def get_event_number(device_name) -> str:
     print("Device not found:", device_name)
     return ""
 
+def setup_buttons(num):
+    print(f"Setting up buttons ({num})")
+    cmd = f"xinput set-button-map {num} 3 2 1 4 5 6 7 8 9"
+    subprocess.run(cmd, shell=True)
+
 def start_listener(num):
     print(f"Starting listener ({num})")
     mouse_path = f"/dev/input/{num}"
@@ -50,11 +55,6 @@ def start_listener(num):
                     ui.syn()
     except KeyboardInterrupt:
         pass
-
-def setup_buttons(num):
-    print(f"Setting up buttons ({num})")
-    cmd = f"xinput set-button-map {num} 3 2 1 4 5 6 7 8 9"
-    subprocess.run(cmd, shell=True)
 
 input_number = get_input_number(device_name_1)
 
