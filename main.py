@@ -60,10 +60,12 @@ input_number = get_input_number(device_name_1)
 
 if input_number:
     setup_buttons(input_number)
+else:
+    print("Failed to find input number")
 
 event_number = get_event_number(device_name_2)
 
 if event_number:
     start_listener(event_number)
 else:
-    print("Failed to find device")
+    print("Failed to find event number")
