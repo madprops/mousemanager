@@ -1,6 +1,8 @@
 import subprocess
 from evdev import InputDevice, list_devices, UInput, ecodes as e
 
+device_name = "BTL Gaming Mouse Consumer Control"
+
 def get_event_number(device_name) -> str:
     print("Getting device number...")
     devices = [InputDevice(path) for path in list_devices()]
@@ -11,10 +13,7 @@ def get_event_number(device_name) -> str:
     print("Device not found:", device_name)
     return ""
 
-device_name = "BTL Gaming Mouse Consumer Control"
-event_number = get_event_number(device_name)
-
-if event_number:
+def start():
     print(f"Found: {event_number}")
     mouse_path = f"/dev/input/{event_number}"
     mouse = InputDevice(mouse_path)
@@ -41,3 +40,10 @@ if event_number:
                     ui.syn()
     except KeyboardInterrupt:
         pass
+
+event_number = get_event_number(device_name)
+
+if event_number:
+    start()
+else:
+    print("Failed to find device.")
