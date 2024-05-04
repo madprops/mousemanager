@@ -33,10 +33,11 @@ def start_listener(num):
             if (prev_direction and direction) and (prev_direction != direction):
                 if (time.time() - last_direction) < 0.1:
                     direction = "up" if direction == "down" else "down"
-                    ui.write(event.type, event.code, event.value)
+                    value = 1 if direction == "up" else -1
+                    ui.write(event.type, event.code, value)
                     ui.syn()
-
-            last_direction = time.time()
+            else:
+                last_direction = time.time()
         elif not e.EV_REL:
             ui.write(event.type, event.code, event.value)
             ui.syn()
