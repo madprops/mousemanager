@@ -19,10 +19,18 @@ def start_listener(num):
     mouse = InputDevice(mouse_path)
     ui = UInput.from_device(mouse)
     direction = ""
-    last_direction = 0
+    prev_direction = ""
+    last_time = 0
 
     for event in mouse.read_loop():
         if event.type == e.EV_REL and event.code == e.REL_WHEEL:
+            now = time.time()
+            duration = now - last_time
+
+            if duration >= 1:
+                direction = ""
+                prev_direction = ""
+
             prev_direction = direction
 
             if event.value > 0:
@@ -31,13 +39,13 @@ def start_listener(num):
                 direction = "down"
 
             if (prev_direction and direction) and (prev_direction != direction):
-                if (time.time() - last_direction) < 0.1:
+                if duration < 0.1:
                     direction = "up" if direction == "down" else "down"
                     value = 1 if direction == "up" else -1
                     ui.write(event.type, event.code, value)
                     ui.syn()
             else:
-                last_direction = time.time()
+                last_time = now
         elif not e.EV_REL:
             ui.write(event.type, event.code, event.value)
             ui.syn()
