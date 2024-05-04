@@ -18,6 +18,7 @@ def start_listener(num):
     mouse_path = f"/dev/input/{num}"
     mouse = InputDevice(mouse_path)
     ui = UInput.from_device(mouse)
+
     direction = ""
     prev_direction = ""
     last_time = 0
@@ -30,6 +31,7 @@ def start_listener(num):
             if duration >= 1:
                 direction = ""
                 prev_direction = ""
+                last_time = 0
 
             prev_direction = direction
 
