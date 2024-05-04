@@ -17,35 +17,36 @@ def start_listener(num):
     print(f"Starting listener ({num})")
     mouse_path = f"/dev/input/{num}"
     mouse = InputDevice(mouse_path)
+    ui = UInput.from_device(mouse)
     direction = ""
     last_direction = 0
-    ui = UInput()
 
     for event in mouse.read_loop():
         if event.type == e.EV_REL and event.code == e.REL_WHEEL:
+            prev_direction = direction
+
             if event.value > 0:
-                if direction == "down":
-                    if last_direction:
-                        if (time.time() - last_direction) < 0.1:
-                            continue
-
                 direction = "up"
-                last_direction = time.time()
             elif event.value < 0:
-                if direction == "up":
-                    if last_direction:
-                        if (time.time() - last_direction) < 0.1:
-                            continue
-
                 direction = "down"
-                last_direction = time.time()
-        else:
+
+            if (prev_direction and direction) and (prev_direction != direction):
+                if (time.time() - last_direction) < 0.1:
+                    direction = "up" if direction == "down" else "down"
+                    ui.write(event.type, event.code, event.value)
+                    ui.syn()
+
+            last_direction = time.time()
+        elif not e.EV_REL:
             ui.write(event.type, event.code, event.value)
             ui.syn()
 
 event_number = get_event_number(device_name)
 
 if event_number:
-    start_listener(event_number)
+    try:
+        start_listener(event_number)
+    except KeyboardInterrupt:
+        pass
 else:
     print("Failed to find event number")
